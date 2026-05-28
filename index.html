@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STRANGER — Personal Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-orb orb1"></div>
+    <div class="hero-orb orb2"></div>
+    <div class="hero-orb orb3"></div>
+    <div class="hero-top">
+      <div class="hero-left">
+        <div class="brand">
+          <div class="brand-logo"><i class="ti ti-layout-dashboard" aria-hidden="true"></i></div>
+          <div>
+            <div class="brand-name">STRANGER</div>
+            <div class="brand-tagline">Your personal command center</div>
+          </div>
+        </div>
+        <div class="brand-profile-btn" onclick="switchTab('profile')" title="My Profile">
+          <div class="brand-avatar-ring">
+            <div class="brand-avatar-inner" id="brand-avatar-inner">
+              <i class="ti ti-user" aria-hidden="true"></i>
+            </div>
+          </div>
+          <div>
+            <div class="brand-profile-name" id="brand-display-name">My Profile</div>
+            <div class="brand-profile-handle" id="brand-display-handle">@stranger</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-date">
+        <strong id="live-time">--:--:--</strong>
+        <span id="live-date">Loading...</span>
+      </div>
+    </div>
+
+    <div class="stat-grid" id="hero-stats">
+      <div class="stat-card sc-purple"><div class="stat-icon"><i class="ti ti-receipt" aria-hidden="true"></i></div><div class="stat-val" id="hs-exp">₹0</div><div class="stat-lbl">Total expenses</div></div>
+      <div class="stat-card sc-green"><div class="stat-icon"><i class="ti ti-arrow-down-circle" aria-hidden="true"></i></div><div class="stat-val" id="hs-txn">0</div><div class="stat-lbl">Transactions</div></div>
+      <div class="stat-card sc-amber"><div class="stat-icon"><i class="ti ti-shield-lock" aria-hidden="true"></i></div><div class="stat-val" id="hs-cred">0</div><div class="stat-lbl">Credentials</div></div>
+      <div class="stat-card sc-pink"><div class="stat-icon"><i class="ti ti-bulb" aria-hidden="true"></i></div><div class="stat-val" id="hs-notes">0</div><div class="stat-lbl">Notes & ideas</div></div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav-tier">
+    <button class="nav-tab" onclick="switchTab('profile')"><i class="ti ti-user-circle" aria-hidden="true"></i> Profile</button>
+    <button class="nav-tab active" onclick="switchTab('overview')"><i class="ti ti-chart-donut" aria-hidden="true"></i> Overview</button>
+    <button class="nav-tab" onclick="switchTab('expenses')"><i class="ti ti-receipt-2" aria-hidden="true"></i> Expenses</button>
+    <button class="nav-tab" onclick="switchTab('vault')"><i class="ti ti-fingerprint" aria-hidden="true"></i> Vault</button>
+    <button class="nav-tab" onclick="switchTab('notes')"><i class="ti ti-notebook" aria-hidden="true"></i> Notes</button>
+    <div class="nav-right"><div class="pulse-dot"></div><span>Live</span></div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <!-- PROFILE TAB -->
+    <div id="tab-profile" class="panel">
+      <div class="ig-cover" onclick="triggerCoverUpload()" title="Change cover photo">
+        <img id="cover-img" src="" alt="" style="display:none"/>
+        <div id="cover-placeholder" class="cover-placeholder">
+          <div class="cover-placeholder-inner">
+            <i class="ti ti-photo" aria-hidden="true"></i>
+            <span>Click to add cover photo</span>
+          </div>
+        </div>
+        <div class="ig-cover-overlay"><span><i class="ti ti-camera" aria-hidden="true"></i> Change cover</span></div>
+        <input type="file" id="cover-file" accept="image/*" style="display:none" onchange="handleCoverUpload(event)"/>
+      </div>
+
+      <div class="profile-actions-row">
+        <div class="ig-avatar-wrap">
+          <div class="ig-avatar-ring" id="ig-avatar-ring">
+            <div class="ig-avatar-inner" id="ig-avatar-inner">
+              <i class="ti ti-user" aria-hidden="true"></i>
+            </div>
+          </div>
+          <div class="ig-avatar-edit-btn" onclick="document.getElementById('avatar-file').click()" title="Change photo">
+            <i class="ti ti-camera" aria-hidden="true"></i>
+          </div>
+          <input type="file" id="avatar-file" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)"/>
+        </div>
+        <div class="profile-actions">
+          <button class="btn btn-primary btn-sm" onclick="openAddPost()"><i class="ti ti-plus" aria-hidden="true"></i> New post</button>
+          <button class="btn btn-outline btn-sm" onclick="openEditProfile()"><i class="ti ti-edit" aria-hidden="true"></i> Edit</button>
+        </div>
+      </div>
+
+      <div class="ig-profile-info">
+        <div class="ig-username" id="ig-username">@stranger</div>
+        <div class="ig-name" id="ig-name">Your Name</div>
+        <div class="ig-bio" id="ig-bio">No bio yet. Click Edit to add one!</div>
+        <div class="ig-website" id="ig-website-wrap" style="display:none">
+          <i class="ti ti-link" aria-hidden="true"></i>
+          <span id="ig-website"></span>
+        </div>
+      </div>
+
+      <div class="ig-stats-row">
+        <div class="ig-stat"><div class="ig-stat-val" id="ig-posts-count">0</div><div class="ig-stat-lbl">Posts</div></div>
+        <div class="ig-stat" onclick="openFollowersModal('followers')" style="cursor:pointer"><div class="ig-stat-val" id="ig-followers">0</div><div class="ig-stat-lbl">Followers</div></div>
+        <div class="ig-stat" onclick="openFollowersModal('following')" style="cursor:pointer"><div class="ig-stat-val" id="ig-following">0</div><div class="ig-stat-lbl">Following</div></div>
+      </div>
+
+      <div class="quick-edit-row">
+        <div class="quick-edit-wrap">
+          <span>Followers:</span>
+          <input type="number" id="inp-followers" min="0" placeholder="0" />
+          <span>Following:</span>
+          <input type="number" id="inp-following" min="0" placeholder="0" />
+          <button class="btn btn-sm" onclick="saveFollowStats()"><i class="ti ti-check" aria-hidden="true"></i></button>
+        </div>
+      </div>
+
+      <div class="ig-highlights" id="ig-highlights">
+        <div class="highlight-new" onclick="addHighlight()">
+          <div class="ig-hl-add"><i class="ti ti-plus" aria-hidden="true"></i></div>
+          <span>New</span>
+        </div>
+      </div>
+
+      <div class="ig-tabs">
+        <button class="ig-tab active" onclick="switchIgTab('posts')"><i class="ti ti-grid-dots" aria-hidden="true"></i> Posts</button>
+        <button class="ig-tab" onclick="switchIgTab('reels')"><i class="ti ti-movie" aria-hidden="true"></i> Reels</button>
+        <button class="ig-tab" onclick="switchIgTab('tagged')"><i class="ti ti-tag" aria-hidden="true"></i> Tagged</button>
+      </div>
+
+      <div id="ig-grid-panel">
+        <div class="ig-grid" id="ig-posts-grid"></div>
+      </div>
+      <div id="ig-reels-panel" style="display:none">
+        <div class="empty-state"><i class="ti ti-movie"></i><p>No reels yet</p></div>
+      </div>
+      <div id="ig-tagged-panel" style="display:none">
+        <div class="empty-state"><i class="ti ti-tag"></i><p>No tagged posts</p></div>
+      </div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div id="tab-overview" class="panel active">
+      <div class="padded">
+        <div class="two-col">
+          <div class="glass glass-accent">
+            <div class="section-title"><i class="ti ti-chart-pie"></i> Spending by category</div>
+            <div class="chart-wrap"><canvas id="catChart"></canvas></div>
+          </div>
+          <div class="glass glass-green">
+            <div class="section-title"><i class="ti ti-activity"></i> Recent activity</div>
+            <div id="recent-activity"></div>
+          </div>
+        </div>
+        <div class="glass glass-amber">
+          <div class="section-title"><i class="ti ti-trending-up"></i> Category breakdown</div>
+          <div id="cat-bars"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPENSES -->
+    <div id="tab-expenses" class="panel">
+      <div class="padded">
+        <div class="glass glass-accent">
+          <div class="section-title"><i class="ti ti-plus-circle"></i> Add expense</div>
+          <div class="form-row">
+            <input type="text" id="exp-desc" placeholder="Description"/>
+            <input type="number" id="exp-amt" placeholder="Amount (₹)" min="0" step="0.01" style="max-width:150px"/>
+            <select id="exp-cat">
+              <option value="food">Food</option><option value="transport">Transport</option>
+              <option value="bills">Bills</option><option value="health">Health</option>
+              <option value="entertainment">Entertainment</option><option value="other">Other</option>
+            </select>
+            <input type="date" id="exp-date" style="max-width:160px"/>
+            <button class="btn btn-primary" onclick="addExpense()"><i class="ti ti-plus"></i> Add</button>
+          </div>
+        </div>
+        <div class="glass">
+          <div class="section-header">
+            <div class="section-title"><i class="ti ti-list"></i> All transactions</div>
+            <span id="exp-total" class="exp-total"></span>
+          </div>
+          <div id="exp-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VAULT -->
+    <div id="tab-vault" class="panel">
+      <div class="padded">
+        <div class="glass glass-accent">
+          <div class="section-title"><i class="ti ti-key"></i> Add credential</div>
+          <div class="form-row">
+            <input type="text" id="v-platform" placeholder="Platform"/>
+            <input type="text" id="v-user" placeholder="Username / Email"/>
+            <input type="text" id="v-pass" placeholder="Password"/>
+            <input type="text" id="v-url" placeholder="URL (optional)" style="max-width:180px"/>
+            <button class="btn btn-primary" onclick="addCred()"><i class="ti ti-lock-plus"></i> Save</button>
+          </div>
+        </div>
+        <div class="glass">
+          <div class="section-title"><i class="ti ti-shield-check"></i> Saved credentials</div>
+          <div id="vault-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTES -->
+    <div id="tab-notes" class="panel">
+      <div class="padded">
+        <div class="glass glass-accent">
+          <div class="section-title"><i class="ti ti-pencil-plus"></i> New note / idea</div>
+          <div class="form-row">
+            <input type="text" id="n-title" placeholder="Title"/>
+            <input type="text" id="n-project" placeholder="Project name"/>
+            <select id="n-type">
+              <option value="note">Note</option>
+              <option value="idea">Idea</option>
+              <option value="task">Task</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <textarea id="n-body" placeholder="Write your note or idea here..."></textarea>
+            <button class="btn btn-primary" onclick="addNote()"><i class="ti ti-device-floppy"></i> Save</button>
+          </div>
+        </div>
+        <div class="glass">
+          <div class="section-title"><i class="ti ti-notes"></i> All notes</div>
+          <input type="search" id="n-search" placeholder="Search..." oninput="renderNotes()"/>
+          <div id="notes-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POST DETAIL MODAL -->
+  <div class="modal-bg" id="post-modal" onclick="closePostModal(event)">
+    <div class="modal modal-post">
+      <img id="pm-img" class="modal-img" src="" alt="Post"/>
+      <div class="modal-actions">
+        <button class="like-btn" id="pm-like-btn" onclick="toggleLike()">
+          <i class="ti ti-heart" id="pm-heart-icon" aria-hidden="true"></i>
+          <span id="pm-likes">0</span>
+        </button>
+        <span class="modal-meta-inline">
+          <i class="ti ti-message-circle" aria-hidden="true"></i>
+          <span id="pm-comments">0</span>
+        </span>
+        <div class="modal-actions-right">
+          <button class="btn btn-sm" onclick="sharePost()" title="Share"><i class="ti ti-share"></i></button>
+          <button class="btn btn-sm btn-danger" onclick="deletePost()" title="Delete"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-user-row">
+          <div class="pm-avatar-wrap" id="pm-avatar-wrap"></div>
+          <div class="modal-username" id="pm-username">@stranger</div>
+        </div>
+        <div class="modal-caption" id="pm-caption"></div>
+        <div class="modal-date" id="pm-date"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD POST MODAL -->
+  <div class="modal-bg" id="add-post-modal" onclick="closeAddPostModal(event)">
+    <div class="modal modal-narrow">
+      <div class="modal-topbar">
+        <span>New Post</span>
+        <button class="btn btn-sm" onclick="document.getElementById('add-post-modal').classList.remove('open')"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-content-pad">
+        <img id="post-preview-img" class="upload-preview" src="" alt="" style="display:none"/>
+        <div class="upload-zone" id="upload-zone">
+          <input type="file" accept="image/*" id="post-file-input" onchange="handlePostImage(event)"/>
+          <i class="ti ti-photo-plus upload-zone-icon" aria-hidden="true"></i>
+          <div class="upload-zone-title">Click or drag photo here</div>
+          <div class="upload-zone-sub">JPG, PNG, GIF, WEBP</div>
+        </div>
+        <div class="mt-12">
+          <textarea id="post-caption-input" placeholder="Write a caption..."></textarea>
+        </div>
+        <div class="mt-12 actions-row">
+          <button class="btn btn-primary flex-1" onclick="submitPost()"><i class="ti ti-upload"></i> Share Post</button>
+          <button class="btn btn-outline" onclick="document.getElementById('add-post-modal').classList.remove('open')">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT PROFILE MODAL -->
+  <div class="modal-bg" id="edit-profile-modal" onclick="closeEditModal(event)">
+    <div class="modal modal-small">
+      <div class="modal-topbar">
+        <span>Edit Profile</span>
+        <button class="btn btn-sm" onclick="document.getElementById('edit-profile-modal').classList.remove('open')"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-content-pad modal-scroll">
+        <div class="ep-field"><label>Full Name</label><input type="text" id="ep-name" placeholder="Your full name"/></div>
+        <div class="ep-field"><label>Username</label><input type="text" id="ep-username" placeholder="@username"/></div>
+        <div class="ep-field"><label>Bio</label><textarea id="ep-bio" placeholder="Tell your story..."></textarea></div>
+        <div class="ep-field"><label>Website</label><input type="text" id="ep-website" placeholder="https://yoursite.com"/></div>
+        <div class="actions-row">
+          <button class="btn btn-primary flex-1" onclick="saveProfile()"><i class="ti ti-device-floppy"></i> Save changes</button>
+          <button class="btn btn-outline" onclick="document.getElementById('edit-profile-modal').classList.remove('open')">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>
